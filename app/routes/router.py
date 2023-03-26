@@ -1,82 +1,26 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File
+import shutil
+from typing import List
 
 from app.schemas.item_scheme import ItemScheme
 
 router = APIRouter()
 
+# Carpetas de archivos
+imgFolder = 'app/temp/img/'
+imgCifFolder = 'app/temp/imgCif/'
 
-@router.post('/ML/Perceptron/adjust', tags=['Machine Learning'])
-def create_machine(data: ItemScheme):
-    gates = ('and', 'or', 'nand', 'nor')
-    gate_assigned = data.gate
-    gate_assigned = gate_assigned.lower()
-    if (gate_assigned in gates):
-        # res = neuron_activ(data.w1, data.w2, data.x1,
-        #                    data.x2, data.th, data.gate)
-        # print('flag')
-        # if (res['result']):
-        #     return {
-        #         "Estado": "Neurona activada",
-        #         "Value": res['value'],
-        #         "Data": {
-        #             "X1": data.x1,
-        #             "X2": data.x2,
-        #             "W1": data.w1,
-        #             "W2": data.w2,
-        #             "Th": data.th
-        #         }
-        #     }
-        # else:
-        #     return 'ok'  # <----------
-        try:
-            res = neuron_activ(data.w1, data.w2, data.x1,
-                               data.x2, data.th, data.gate)
-            # print('flag')
-            if (res['result']):
-                return {
-                    "Estado": "Neurona activada",
-                    "Value": res['values'],
-                    "Data": {
-                        "X1": data.x1,
-                        "X2": data.x2,
-                        "W1": data.w1,
-                        "W2": data.w2,
-                        "Th": data.th
-                    }
-                }
-            else:
-                return {
-                    "Estado": "Necesita recálculo",
-                    "Value": res['values'],
-                    "Data": {
-                        "X1": data.x1,
-                        "X2": data.x2,
-                        "W1": data.w1,
-                        "W2": data.w2,
-                        "Th": data.th
-                    }
-                }  # <----------
-        except:
-            return {
-                "Estado": "Algo fue mal, el servicio no está disponible",
-                "Value": None,
-                "Data": {
-                    "X1": data.x1,
-                    "X2": data.x2,
-                    "W1": data.w1,
-                    "W2": data.w2,
-                    "Th": data.th
-                }
-            }
-    else:
-        return {
-            "Estado": "Compuerta lógica no válida",
-            "Value": None,
-            "Data": {
-                "X1": data.x1,
-                "X2": data.x2,
-                "W1": data.w1,
-                "W2": data.w2,
-                "Th": data.th
-            }
-        }
+
+@router.post('/API/Encrypt/Image', tags=['Post', 'Recive Imagen', 'encrypt'], status_code=200, response_description="Petición válida")
+async def reciveImage(file: UploadFile = File(...)):
+    with open(f'{imgFolder}{file.filename}', 'wb') as F:
+        shutil.copyfileobj(file.file, F)
+    return {"file_name": file.filename}
+
+
+@router.post('/API/Encrypt/Image/Multiple', tags=['Post', 'Recive Imagen', 'encrypt'], status_code=200, response_description="Petición válida")
+async def uploadImg(files: List[UploadFile] = File(...)):
+    for img in files:
+        with open(f'{img.filename}', 'wb') as F:
+            shutil.copyfileobj(img.file, F)
+    return {"file_name": "Good"}
