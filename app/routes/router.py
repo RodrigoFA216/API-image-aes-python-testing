@@ -1,9 +1,9 @@
 from fastapi import APIRouter, UploadFile, File
-import shutil
-from typing import List
 from fastapi.responses import JSONResponse, FileResponse
-from os import getcwd
+from typing import List
 import os
+from os import getcwd
+import shutil
 
 from app.schemas.item_scheme import ItemScheme
 from app.functions import divide_img
@@ -34,10 +34,7 @@ async def reciveImage(file: UploadFile = File(...)):
         path = f'{imgFolder}{file.filename}'
         # file_folder contiene dónde guardó la imagen en la carpeta temp img
         response = divide_img.function(file_path, file.filename)
-        # print("file path", file_path)
-        # print("file filename", file.filename)
-        # print("response", response)
-        return FileResponse(response)
+        return FileResponse(response['img_yfile'])
     else:
         return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
 

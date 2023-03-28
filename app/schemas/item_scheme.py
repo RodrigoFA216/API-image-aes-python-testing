@@ -4,9 +4,9 @@ from pydantic import BaseModel, Field
 
 
 class ItemScheme(BaseModel):
-    x1: list[int] = Field([-1, -1, 1, 1], title='Bit 1')
-    x2: list[int] = Field([-1, 1, -1, 1], title='Bit 2')
-    th: float = Field(None, title='Theta')
-    w1: float = Field(None, title='Weight 1')
-    w2: float = Field(None, title='Weight 2')
-    gate: str = Field('And', title='Logic Gate')
+    size_img: list[int] = Field(None, title='Tamaño de la imagen')
+    resize_img: list[int] = Field(
+        None, title='Tamaño de reescalado de la imagen')
+    unzip_file: str = Field(None, title='Llave de descifrado')
+    init_cb: int = Field(None, title='Inicio de codificación de Cb')
+    init_cr: int = Field(None, title='Inicio de codificación de Cr')
