@@ -6,7 +6,7 @@ from os import getcwd
 import shutil
 
 from app.schemas.item_scheme import ItemScheme
-from app.functions import divide_img
+from app.functions import divide_img, AES_cypher
 
 router = APIRouter()
 
@@ -32,6 +32,8 @@ async def reciveImage(file: UploadFile = File(...)):
             F.write(content)
             F.close()
         response = divide_img.function(file_path, file.filename)
+        AES_cypher.encriptar('0', file_path, file.filename)
+        # rmtree(file_folder)
         return FileResponse(response['img_yfile'])
     else:
         return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
@@ -50,26 +52,26 @@ async def reciveImage(file: UploadFile = File(...)):
         return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
 
 
-@router.post('/API/Encrypt/Image/Multiple', tags=['Post', 'Recive Multiple Imagen', 'encrypt'])
-async def uploadImg(files: List[UploadFile] = File(...)):
-    try:
-        for img in files:
-            with open(f'{img.filename}', 'wb') as F:
-                shutil.copyfileobj(img.file, F)
-        return JSONResponse(content={"file_name": "Good"}, status_code=200)
-    except:
-        return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
+# @router.post('/API/Encrypt/Image/Multiple', tags=['Post', 'Recive Multiple Imagen', 'encrypt'])
+# async def uploadImg(files: List[UploadFile] = File(...)):
+#     try:
+#         for img in files:
+#             with open(f'{img.filename}', 'wb') as F:
+#                 shutil.copyfileobj(img.file, F)
+#         return JSONResponse(content={"file_name": "Good"}, status_code=200)
+#     except:
+#         return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
 
 
-@router.post('/API/Encrypt/Image/V2', tags=['Post', 'Recive Imagen', 'encrypt'])
-async def reciveImage(file: UploadFile = File(...)):
-    try:
-        if file.filename[-4:] in imgFormats:
-            with open(f'{imgFolder}{file.filename}', 'wb') as F:
-                shutil.copyfileobj(file.file, F)
-            path = f'{imgFolder}{file.filename}'
-            return FileResponse(path)
-        else:
-            return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
-    except:
-        return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
+# @router.post('/API/Encrypt/Image/V2', tags=['Post', 'Recive Imagen', 'encrypt'])
+# async def reciveImage(file: UploadFile = File(...)):
+#     try:
+#         if file.filename[-4:] in imgFormats:
+#             with open(f'{imgFolder}{file.filename}', 'wb') as F:
+#                 shutil.copyfileobj(file.file, F)
+#             path = f'{imgFolder}{file.filename}'
+#             return FileResponse(path)
+#         else:
+#             return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
+#     except:
+#         return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
