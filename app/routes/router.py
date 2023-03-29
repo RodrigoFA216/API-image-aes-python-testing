@@ -4,9 +4,10 @@ from typing import List
 import os
 from os import getcwd
 import shutil
+from dotenv import load_dotenv
 
 from app.schemas.item_scheme import ItemScheme
-from app.functions import divide_img, AES_cypher
+from app.functions import divide_img, cypher
 
 router = APIRouter()
 
@@ -16,6 +17,10 @@ imgCifFolder = 'app/temp/imgCif/'
 
 # Formatos válidos
 imgFormats = ('.png', '.jpg', '.bmp')
+
+# llave privada
+load_dotenv(".env")
+key = b'0123456789abcdef01234567'
 
 
 @router.post('/API/Encrypt/Image/V3', tags=['Post', 'Recive Imagen', 'encrypt'])
@@ -32,8 +37,9 @@ async def reciveImage(file: UploadFile = File(...)):
             F.write(content)
             F.close()
         response = divide_img.function(file_path, file.filename)
-        AES_cypher.encriptar('0', file_path, file.filename)
+        cypher.encrypt_file(key, file_path)
         # rmtree(file_folder)
+        print(file_path)
         return FileResponse(response['img_yfile'])
     else:
         return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
