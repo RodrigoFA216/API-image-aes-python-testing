@@ -17,6 +17,10 @@
 - Dev Dependencies:
     - autopep8
 
+## Run aplication 
+
+        uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
 # Miscelaneus
 
 Los tres niveles del modelo de madurez de Richardson para API REST son los siguientes:

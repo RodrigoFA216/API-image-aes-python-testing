@@ -31,8 +31,6 @@ async def reciveImage(file: UploadFile = File(...)):
             content = await file.read()
             F.write(content)
             F.close()
-        path = f'{imgFolder}{file.filename}'
-        # file_folder contiene dónde guardó la imagen en la carpeta temp img
         response = divide_img.function(file_path, file.filename)
         return FileResponse(response['img_yfile'])
     else:
