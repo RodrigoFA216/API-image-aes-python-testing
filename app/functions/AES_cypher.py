@@ -1,23 +1,12 @@
+import cv2
 from Crypto.Cipher import AES
-import os
+from Crypto.Util.Padding import pad
 
 
-def encriptar(key, path, name):
-    llave = b'0123456789abcdef01234567'
-    chunk = 64 * 1024  # métrica usada para eer el archivo en bloques de 64 kilobytes
-    chunk = int(chunk)
-    extension = path[:-4]+'.aes'
-    archivo_tamaño = str(os.path.getsize(path)).zfill(16)
-    IV = os.urandom(16)
-    encryptor = AES.new(llave, AES.MODE_OFB, IV)
-    with open(path, 'rb') as infile:
-        with open(extension, 'wb') as outfile:
-            outfile.write(archivo_tamaño.encode('utf-8'))
-            outfile.write(IV)
-            while True:
-                chunk = infile.read(int(chunk))
-                if len(chunk) == 0:
-                    break
-                elif len(chunk) % 16 != 0:
-                    chunk += b' ' * (16 - (len(chunk) % 16))
-                outfile.write(encryptor.encrypt(chunk))
+def cypher_image(key, vector, path, name):
+    img = cv2.imread(path, cv2.IMREAD_COLOR)
+    aes = AES.new(key, AES.MODE_OFB, vector)
+    # Aplicar el cifrado
+    img_cifrada = aes.encrypt(pad(img.tobytes(), AES.block_size))
+    with open(path[:-len(name)]+name[:-4]+'-cif'+name[-4:], 'wb') as f:
+        f.write(img_cifrada)

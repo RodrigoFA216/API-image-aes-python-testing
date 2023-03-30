@@ -7,7 +7,7 @@ import shutil
 from dotenv import load_dotenv
 
 from app.schemas.item_scheme import ItemScheme
-from app.functions import divide_img, cypher
+from app.functions import divide_img, AES_cypher
 
 router = APIRouter()
 
@@ -18,9 +18,9 @@ imgCifFolder = 'app/temp/imgCif/'
 # Formatos válidos
 imgFormats = ('.png', '.jpg', '.bmp')
 
-# llave privada
-load_dotenv(".env")
-key = b'0123456789abcdef01234567'
+# crear las instancias del objeto AES
+clave = b'LlaveSecreta1234'  # la clave debe tener 16, 24 o 32 bytes de longitud
+iv = b'VectorInicial123'  # el vector inicial debe tener 16 bytes de longitud
 
 
 @router.post('/API/Encrypt/Image/V3', tags=['Post', 'Recive Imagen', 'encrypt'])
@@ -37,7 +37,8 @@ async def reciveImage(file: UploadFile = File(...)):
             F.write(content)
             F.close()
         response = divide_img.function(file_path, file.filename)
-        cypher.encrypt_file(key, file_path)
+        # cypher.encrypt_file(key, file_path)
+        AES_cypher.cypher_image(clave, iv, file_path, file.filename)
         # rmtree(file_folder)
         print(file_path)
         return FileResponse(response['img_yfile'])
