@@ -37,7 +37,6 @@ async def reciveImage(file: UploadFile = File(...)):
             F.write(content)
             F.close()
         response = divide_img.function(file_path, file.filename)
-        # cypher.encrypt_file(key, file_path)
         AES_cypher.cypher_image(clave, iv, file_path, file.filename)
         # rmtree(file_folder)
         print(file_path)

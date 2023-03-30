@@ -14,10 +14,16 @@ def function(path, name):
     ycb = cv2.merge([y, cb, np.zeros_like(cb)])
     ycr = cv2.merge([y, np.zeros_like(cr), cr])
     cv2.imwrite(carpeta_img[:-4]+'-Y-'+open_img[-4:], y)
+    cv2.imwrite(carpeta_img[:-4]+'-Cb-'+open_img[-4:], cb)
+    cv2.imwrite(carpeta_img[:-4]+'-Cr-'+open_img[-4:], cr)
     cv2.imwrite(carpeta_img[:-4]+'-YCb-'+open_img[-4:], ycb)
     cv2.imwrite(carpeta_img[:-4]+'-YCr-'+open_img[-4:], ycr)
-    img_y = f'{carpeta_img[:-4]}-YCb-{open_img[-4:]}'
+    img_y = f'{carpeta_img[:-4]}-Y-{open_img[-4:]}'
+    img_cb = f'{carpeta_img[:-4]}-Cb-{open_img[-4:]}'
+    img_cr = f'{carpeta_img[:-4]}-Cr-{open_img[-4:]}'
     return {
         "img_yfile": img_y,
+        "img_cbfile": img_cb,
+        "img_crfile": img_cr,
         "size": size
     }
