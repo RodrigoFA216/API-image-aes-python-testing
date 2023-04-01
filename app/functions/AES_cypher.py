@@ -10,3 +10,5 @@ def cypher_image(key, vector, path, name):
     img_cifrada = aes.encrypt(pad(img.tobytes(), AES.block_size))
     with open(path[:-len(name)]+name[:-4]+'-cif'+name[-4:], 'wb') as f:
         f.write(img_cifrada)
+    string = f'{path[:-len(name)]}{name[:-4]}-cif{name[-4:]}'
+    return string

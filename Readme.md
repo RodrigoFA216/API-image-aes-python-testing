@@ -23,7 +23,7 @@
 
 # Miscelaneus
 
-Los tres niveles del modelo de madurez de Richardson para API REST son los siguientes:
+Los cuatro niveles del modelo de madurez de Richardson para API REST son los siguientes:
 
 1. Nivel 0 - POX (Plain Old XML): 
 

@@ -7,7 +7,7 @@ import shutil
 from dotenv import load_dotenv
 
 from app.schemas.item_scheme import ItemScheme
-from app.functions import divide_img, AES_cypher
+from app.functions import divide_img, AES_cypher, AES_decrypt
 
 router = APIRouter()
 
@@ -17,13 +17,14 @@ imgCifFolder = 'app/temp/imgCif/'
 
 # Formatos válidos
 imgFormats = ('.png', '.jpg', '.bmp')
+cifFormats = ('.png', '.jpg', '.bmp', '.cif', '.aes')
 
 # crear las instancias del objeto AES
 clave = b'LlaveSecreta1234'  # la clave debe tener 16, 24 o 32 bytes de longitud
 iv = b'VectorInicial123'  # el vector inicial debe tener 16 bytes de longitud
 
 
-@router.post('/API/Encrypt/Image/V3', tags=['Post', 'Recive Imagen', 'encrypt'])
+@router.post('/API/Encrypt/Image', tags=['Post', 'Recive Imagen', 'encrypt'])
 async def reciveImage(file: UploadFile = File(...)):
     if file.filename[-4:] in imgFormats:
         # Uno la ruta de imgFolder con el nombre del archivo menos la extensión
@@ -36,26 +37,39 @@ async def reciveImage(file: UploadFile = File(...)):
             content = await file.read()
             F.write(content)
             F.close()
-        response = divide_img.function(file_path, file.filename)
-        AES_cypher.cypher_image(clave, iv, file_path, file.filename)
+        res_divide = divide_img.function(file_path, file.filename)
+        res_cif = AES_cypher.cypher_image(clave, iv, file_path, file.filename)
         # rmtree(file_folder)
-        print(file_path)
-        return FileResponse(response['img_yfile'])
+        # print(file_path)
+        return FileResponse(res_divide['img_yfile'])
     else:
-        return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
+        return JSONResponse(content={
+            "Error": "La extención del archivo no es válida"
+        }, status_code=200)
 
 
-@router.post('/API/Encrypt/Image', tags=['Post', 'Recive Imagen', 'encrypt'])
+@router.post('/API/Decrypt/Image', tags=['Post', 'Recive Imagen', 'decrypt'])
 async def reciveImage(file: UploadFile = File(...)):
-    try:
-        if file.filename[-4:] in imgFormats:
-            with open(f'{imgFolder}{file.filename}', 'wb') as F:
-                shutil.copyfileobj(file.file, F)
-            return JSONResponse(content={"file_name": file.filename}, status_code=200)
-        else:
-            return JSONResponse(content={"Error": "La extención del archivo no es válida"}, status_code=200)
-    except:
-        return JSONResponse(content={"Error": "Algo falló con el archivo"}, status_code=205)
+    if file.filename[-4:] in cifFormats:
+        file_folder = os.path.join(imgCifFolder, file.filename[:-4])
+        os.makedirs(file_folder, exist_ok=True)
+        file_path = os.path.join(file_folder, file.filename)
+        with open(file_path, 'wb') as F:
+            content = await file.read()
+            F.write(content)
+            F.close()
+        AES_decrypt.decrypt_image(clave, iv, file_path, file.filename)
+        return FileResponse(file_path)
+    else:
+        return JSONResponse(content={
+            "Error": "La extención del archivo no es válida"
+        }, status_code=200)
+    # try:
+    #     ...
+    # except:
+    #     return JSONResponse(content={
+    #             "Error": "Algo falló con el archivo"
+    #         }, status_code=205)
 
 
 # @router.post('/API/Encrypt/Image/Multiple', tags=['Post', 'Recive Multiple Imagen', 'encrypt'])
