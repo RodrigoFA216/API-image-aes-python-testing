@@ -48,3 +48,22 @@ def decrypt_image(key, vector, path, name):
     # cv2.imwrite(path[:-len(name)]+name[:-4]+'-decif'+name[-4:], img_descifrada)
     # string = f'{path[:-len(name)]}{name[:-4]}-decif{name[-4:]}'
     # return string
+
+
+def decipher_image(key, vector, path):
+    with open(path, 'rb') as f:
+        img_cifrada = f.read()
+
+    aes = AES.new(key, AES.MODE_OFB, vector)
+    # Desencriptar la imagen
+    img_desencriptada = aes.decrypt(img_cifrada)
+    # Eliminar el relleno
+    img_desencriptada = unpad(img_desencriptada, AES.block_size)
+    # Crear la imagen a partir de los bytes desencriptados
+    img = cv2.imdecode(np.frombuffer(img_desencriptada,
+                       dtype=np.uint8), cv2.IMREAD_COLOR)
+    # Guardar la imagen descifrada
+    with open(path[:-8] + '-des' + path[-4:], 'wb') as f:
+        f.write(img)
+    string = f'{path[:-8]}-des{name[-4:]}'
+    return string

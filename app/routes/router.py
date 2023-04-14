@@ -33,11 +33,45 @@ async def reciveImage(file: UploadFile = File(...)):
         os.makedirs(file_folder, exist_ok=True)
         # Guardo el archivo dentro de la carpeta
         file_path = os.path.join(file_folder, file.filename)
+        print(file_path)
         with open(file_path, 'wb') as F:
             content = await file.read()
             F.write(content)
             F.close()
-        res_divide = divide_img.function(file_path, file.filename)
+        # res_divide = divide_img.function(file_path, file.filename)
+        res_divide = divide_img.divide(file_path, file.filename)
+        res_cif = AES_cypher.cypher_image(clave, iv, file_path, file.filename)
+        # rmtree(file_folder)
+        # print(file_path)
+        return FileResponse(res_cif)
+    else:
+        return JSONResponse(content={
+            "Error": "La extención del archivo no es válida"
+        }, status_code=200)
+    # try:
+    #     ...
+    # except:
+    #     return JSONResponse(content={
+    #             "Error": "Algo falló con el archivo"
+    #         }, status_code=205)
+
+
+@router.post('/API/Encrypt/Image/Show', tags=['Post', 'Recive Imagen', 'encrypt'])
+async def reciveImage(file: UploadFile = File(...)):
+    if file.filename[-4:] in imgFormats:
+        # Uno la ruta de imgFolder con el nombre del archivo menos la extensión
+        file_folder = os.path.join(imgFolder, file.filename[:-4])
+        # Creo la ruta final del archivo
+        os.makedirs(file_folder, exist_ok=True)
+        # Guardo el archivo dentro de la carpeta
+        file_path = os.path.join(file_folder, file.filename)
+        print(file_path)
+        with open(file_path, 'wb') as F:
+            content = await file.read()
+            F.write(content)
+            F.close()
+        # res_divide = divide_img.function(file_path, file.filename)
+        res_divide = divide_img.divide(file_path, file.filename)
         res_cif = AES_cypher.cypher_image(clave, iv, file_path, file.filename)
         # rmtree(file_folder)
         # print(file_path)
@@ -46,6 +80,12 @@ async def reciveImage(file: UploadFile = File(...)):
         return JSONResponse(content={
             "Error": "La extención del archivo no es válida"
         }, status_code=200)
+    # try:
+    #     ...
+    # except:
+    #     return JSONResponse(content={
+    #             "Error": "Algo falló con el archivo"
+    #         }, status_code=205)
 
 
 @router.post('/API/Decrypt/Image', tags=['Post', 'Recive Imagen', 'decrypt'])
@@ -54,6 +94,7 @@ async def reciveImage(file: UploadFile = File(...)):
         file_folder = os.path.join(imgCifFolder, file.filename[:-4])
         os.makedirs(file_folder, exist_ok=True)
         file_path = os.path.join(file_folder, file.filename)
+        print(file_path)
         with open(file_path, 'wb') as F:
             content = await file.read()
             F.write(content)
