@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 
 from app.schemas.item_scheme import ItemScheme
 from app.functions import divide_img, AES_cypher, AES_decrypt
+from app.functions.AES_cypher import cypher_image
+from app.functions.AES_decrypt import decipher_image
 
 router = APIRouter()
 
@@ -40,7 +42,11 @@ async def reciveImage(file: UploadFile = File(...)):
             F.close()
         # res_divide = divide_img.function(file_path, file.filename)
         res_divide = divide_img.divide(file_path, file.filename)
-        res_cif = AES_cypher.cypher_image(clave, iv, file_path, file.filename)
+        res_cif = await cypher_image(clave, iv, file_path, file.filename)
+        try:
+            res_uncif = await decipher_image(clave, iv, file_path, file.filename)
+        except:
+            print("error en el descifrado")
         # rmtree(file_folder)
         # print(file_path)
         return FileResponse(res_cif)
