@@ -62,8 +62,9 @@ async def decipher_image(key, vector, path, name):
     img = cv2.imdecode(np.frombuffer(img_desencriptada,
                        dtype=np.uint8), cv2.IMREAD_COLOR)
     # Guardar la imagen descifrada
-    with open(path[:-len(name)]+name[:-4]+'-des'+name[-4:], 'wb') as f:
-        f.write(img)
-    print("flag")
+
+    # with open(path[:-len(name)]+name[:-4]+'-des'+name[-4:], 'wb') as f: # tiene un error
+    #     f.write(img) #no puede escribir un nonetype
+    print(type(img_desencriptada))
     string = f'{path[:-len(name)]}{name[:-4]}-des{name[-4:]}'
     return string

@@ -40,3 +40,9 @@ Los cuatro niveles del modelo de madurez de Richardson para API REST son los sig
 4. Nivel 3 - HATEOAS (Hypermedia as the Engine of Application State): 
 
 - Este nivel introduce la idea de que los recursos deben contener enlaces a otros recursos relacionados. Las aplicaciones en este nivel utilizan los enlaces para navegar por la aplicación y realizar operaciones CRUD en los recursos.
+
+# Dudas
+
+1. En la desencriptación se hace un unpadding para quitar los bits añadidos del múltiplo de 16 requeridos de la información pero no se sabe cuales son
+2. Cómo transformamos los bytes a imágen?
+3. 
