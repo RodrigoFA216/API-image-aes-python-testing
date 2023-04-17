@@ -43,6 +43,6 @@ Los cuatro niveles del modelo de madurez de Richardson para API REST son los sig
 
 # Dudas
 
-1. En la desencriptación se hace un unpadding para quitar los bits añadidos del múltiplo de 16 requeridos de la información pero no se sabe cuales son
-2. Cómo transformamos los bytes a imágen?
+1. En la desencriptación se hace un unpadding para quitar los bits añadidos del múltiplo de 16 requeridos de la información pero no se sabe cuales son | acción: leer la documentación de Padding
+2. Cómo transformamos los bytes a imágen? | acción: Preguntar al Dr Cedillo
 3. 

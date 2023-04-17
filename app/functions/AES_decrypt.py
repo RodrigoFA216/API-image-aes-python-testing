@@ -31,7 +31,7 @@ def decrypt_image(key, vector, path, name):
     img_descifrada = cipher.decrypt(img_cifrada)
     img_np = np.frombuffer(img_descifrada, np.uint8)
     img_np = img_np.reshape((img_cifrada.shape[0], img_cifrada.shape[1], -1))
-    cv2.imshow('Imagen descifrada', img_np)
+    cv2.imshow("Imagen descifrada", img_np)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     # with open(path, 'rb') as F:
@@ -51,7 +51,7 @@ def decrypt_image(key, vector, path, name):
 
 
 async def decipher_image(key, vector, path, name):
-    with open(path, 'rb') as f:
+    with open(path, "rb") as f:
         img_cifrada = f.read()
     aes = AES.new(key, AES.MODE_OFB, vector)
     # Desencriptar la imagen
@@ -59,12 +59,12 @@ async def decipher_image(key, vector, path, name):
     # Eliminar el relleno
     # img_desencriptada = unpad(img_desencriptada, AES.block_size)
     # Crear la imagen a partir de los bytes desencriptados
-    img = cv2.imdecode(np.frombuffer(img_desencriptada,
-                       dtype=np.uint8), cv2.IMREAD_COLOR)
+    img = cv2.imdecode(
+        np.frombuffer(img_desencriptada, dtype=np.uint8), cv2.IMREAD_COLOR
+    )
     # Guardar la imagen descifrada
-
     # with open(path[:-len(name)]+name[:-4]+'-des'+name[-4:], 'wb') as f: # tiene un error
     #     f.write(img) #no puede escribir un nonetype
-    print(type(img_desencriptada))
-    string = f'{path[:-len(name)]}{name[:-4]}-des{name[-4:]}'
+    print(type(img))
+    string = f"{path[:-len(name)]}{name[:-4]}-des{name[-4:]}"
     return string

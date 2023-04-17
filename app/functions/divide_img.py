@@ -36,6 +36,8 @@ def divide(path, name):
     cv2.imwrite(carpeta_img[:-4]+"-cb-min-"+open_img[-4:], cb_redux_smooth)
     cv2.imwrite(carpeta_img[:-4]+"-cr-min-"+open_img[-4:], cr_redux_smooth)
     img_y = f'{carpeta_img[:-4]}-Y-{open_img[-4:]}'
+    img_cb = f'{carpeta_img[:-4]}-Cb-{open_img[-4:]}'
+    img_cr = f'{carpeta_img[:-4]}-Cr-{open_img[-4:]}'
     cb_resize_path = f'{carpeta_img[:-4]}-cb-min-{open_img[-4:]}'
     cr_resize_path = f'{carpeta_img[:-4]}-cr-min-{open_img[-4:]}'
     return {
@@ -45,7 +47,9 @@ def divide(path, name):
         "or_w": width,
         "resize_h": resize_height,
         "resize_w": resize_width,
-        "img_yfile": img_y
+        "img_yfile": img_y,
+        "img_cbfile": img_cb,
+        "img_crfile": img_cr,
     }
 
 
